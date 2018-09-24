@@ -216,4 +216,18 @@ describe 'Digital Objects controller' do
       archival_object.should_not eq(nil)
       archival_object.instances.count.should be(0)
     end
+
+
+    it "includes the ARK identifier in the digital_object's JSON" do
+      digital_object = create(:json_digital_object)
+      uri = JSONModel(:digital_object).uri_for(digital_object.id)
+      json = JSONModel::HTTP.get_json(uri)
+      
+      expect(json['ark_identifier']).to_not be_nil
+      expect(json['ark_identifier']['id']).to_not be_nil
+
+      digital_object.delete
+    end
+
+
 end
