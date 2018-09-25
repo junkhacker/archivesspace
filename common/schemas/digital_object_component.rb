@@ -51,6 +51,12 @@
           },
 
       "has_unpublished_ancestor" => {"type" => "boolean", "readonly" => "true"},
+      
+      "ark_identifier" => {
+        "type" => "JSONModel(:ark_identifier) object",
+        "readonly" => true,
+        "required" => false
+      }
 
     },
   },
