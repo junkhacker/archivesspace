@@ -11,8 +11,11 @@
       "label" => {"type" => "string", "maxLength" => 255},
       "title" => {"type" => "string", "maxLength" => 16384, "ifmissing" => nil},
       "display_string" => {"type" => "string", "maxLength" => 8192, "readonly" => true},
+      
+      "external_ark_url" => {"type" => "string", "required" => false},
 
       "file_versions" => {"type" => "array", "items" => {"type" => "JSONModel(:file_version) object"}},
+
 
       "parent" => {
         "type" => "object",
