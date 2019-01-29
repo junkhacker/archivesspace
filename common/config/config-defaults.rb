@@ -613,8 +613,8 @@ AppConfig[:pui_page_custom_actions] = []
 
 # If AppConfig[:slugs] is set to :show, slugged URLs will be generated in the public interface.
 # If set to :hide, ID based URLs will be generated in the public interface.
-# Changing this option will not remove or clear any slugs that exist currently. 
-# This setting only affects links that are displayed. URLs that point to valid slugs will still work. 
+# Changing this option will not remove or clear any slugs that exist currently.
+# This setting only affects links that are displayed. URLs that point to valid slugs will still work.
 # WARNING: Changing this setting may require an index rebuild for changes to take effect.
 AppConfig[:slugs] = :show
 
@@ -628,5 +628,16 @@ AppConfig[:auto_generate_slugs_with_id] = false
 # For Resources: if this option and auto_generate_slugs_with_id are both enabled, then slugs for Resources will be generated with EADID instead of the identifier.
 AppConfig[:generate_resource_slugs_with_eadid] = false
 
+#The number of characters to truncate before showing the 'Read More' link on notes
+AppConfig[:pui_readmore_max_characters] = 450
 
+# NAAN value to use in ARK identifiers.
+# Should be set to institutional NAAN, or any other value valid in URLs.
+AppConfig[:ark_naan] = "f00001"
 
+# URL prefix to use in ARK identifiers.
+# In most cases this will be the same as the PUI URL.
+AppConfig[:ark_url_prefix] = proc { AppConfig[:public_proxy_url] }
+
+# Flag for turning ARK IDs in exports off and on
+AppConfig[:ark_ids_enabled] = true

@@ -13,11 +13,14 @@
       "label" => {"type" => "string", "maxLength" => 255},
       "title" => {"type" => "string", "ifmissing" => nil},
       "display_string" => {"type" => "string", "maxLength" => 8192, "readonly" => true},
+      
+      "external_ark_url" => {"type" => "string", "required" => false},
 
       "file_versions" => {"type" => "array", "items" => {"type" => "JSONModel(:file_version) object"}},
       
       "slug" => {"type" => "string"},
       "is_slug_auto" => {"type" => "boolean"},
+
 
       "parent" => {
         "type" => "object",
@@ -53,6 +56,12 @@
           },
 
       "has_unpublished_ancestor" => {"type" => "boolean", "readonly" => "true"},
+      
+      "ark_identifier" => {
+        "type" => "JSONModel(:ark_identifier) object",
+        "readonly" => true,
+        "required" => false
+      }
 
     },
   },

@@ -244,6 +244,12 @@ describe "Exported MODS metadata" do
       expect(@mods).to have_tag "identifier" => @digital_object['digital_object_id']
     end
 
+    it "creates an identifier tag containing the ARK ID for digital objects" do
+      ark = ARKIdentifier.first(:digital_object_id => @digital_object.id)
+      url = "#{AppConfig[:ark_url_prefix]}/ark:/#{AppConfig[:ark_naan]}/#{ark.id}"
+      @mods.should have_tag "identifier" => url
+    end
+
     it "creates a typeOfResource tag for the digital object type" do
       expect(@mods).to have_tag "typeOfResource" => I18n.t("enumerations.digital_object_digital_object_type." + @digital_object['digital_object_type'])
     end

@@ -137,4 +137,28 @@ describe 'DigitalObjectComponent model' do
 
   end
 
+
+  it "creates an ARK identifier with archival object" do
+    doc = create(:json_digital_object_component)
+
+    doc_row = DigitalObjectComponent.first
+
+    expect(ARKIdentifier.first(:digital_object_component_id => doc_row[:id])).to_not be_nil
+    
+    doc.delete
+  end
+
+  it "deletes ARK Identifier when resource is deleted" do
+    doc = create(:json_digital_object_component)
+
+    doc_row = DigitalObjectComponent.first
+
+    expect(ARKIdentifier.first(:digital_object_component_id => doc_row[:id])).to_not be_nil
+
+    doc.delete
+
+    expect(ARKIdentifier.first(:digital_object_component_id => doc_row[:id])).to be_nil
+  end
+
+
 end

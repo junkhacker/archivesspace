@@ -439,7 +439,7 @@ en:
   accession:
     slug: Slug
     is_slug_auto: Automatically generate Slug?
-    _frontend: 
+    _frontend:
       messages:
         created: Accession <strong>%{accession.display_string}</strong> created
         unsuppressed: Accession <strong>%{accession.display_string}</strong> unsuppressed
@@ -456,6 +456,7 @@ en:
       action:
         create: Create Accession
         save: Save Accession
+    external_ark_url: External ARK URL
 
   agent: &agent_attributes
     slug: Slug
@@ -515,6 +516,7 @@ en:
   archival_object:
     slug: Slug
     is_slug_auto: Automatically generate Slug?
+    external_ark_url: External ARK URL
     _frontend:
       messages:
         created: Archival Object <strong>%{archival_object.display_string}</strong> on Resource <strong>%{resource.title}</strong> created
@@ -631,10 +633,12 @@ en:
         add_child: Add Child
         create: Create Digital Object
         save: Save Digital Object
+    external_ark_url: External ARK URL
 
   digital_object_component:
     slug: Slug
     is_slug_auto: Automatically generate Slug?
+    external_ark_url: External ARK URL
     _frontend:
       messages:
         created_with_parent: Digital Object Component <strong>%{digital_object_component.display_string}</strong> created as child of <strong>%{parent.display_string}</strong> on Digital Object <strong>%{digital_object.title}</strong>
@@ -892,6 +896,7 @@ en:
         create: Create Resource
         save: Save Resource
         delete_multiple: Delete Resources
+    external_ark_url: External ARK URL
 
   preference:
     _frontend:

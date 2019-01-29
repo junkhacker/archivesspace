@@ -7,6 +7,7 @@
     "properties" => {
       "uri" => {"type" => "string", "required" => false},
 
+      "external_ark_url" => {"type" => "string", "required" => false},
       "external_ids" => {"type" => "array", "items" => {"type" => "JSONModel(:external_id) object"}},
 
       "title" => {"type" => "string", "maxLength" => 8192, "ifmissing" => nil},
@@ -173,6 +174,12 @@
       },
 
       "instances" => {"type" => "array", "items" => {"type" => "JSONModel(:instance) object"}},
+      
+      "ark_identifier" => {
+        "type" => "JSONModel(:ark_identifier) object",
+        "readonly" => true,
+        "required" => false
+      }
 
     },
   },

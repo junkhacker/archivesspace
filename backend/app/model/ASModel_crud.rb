@@ -232,6 +232,9 @@ module ASModel
       successfully_deleted_models = []
       last_error = nil
 
+      #delete ARK Identifier (if exists) first
+      self.delete_ark_identifier
+
       while true
         progressed = false
         object_graph.each do |model, ids_to_delete|
@@ -248,8 +251,12 @@ module ASModel
 
           if model.my_jsonmodel(true)
             ids_to_delete.each do |id|
-              deleted_uri = model.my_jsonmodel(true).
-                                  uri_for(id, :repo_id => model.active_repository)
+              deleted_model = model.my_jsonmodel(true) 
+
+              # ARKIdentifiers don't have URIs, so they are deleted above
+              unless model == ARKIdentifier
+                deleted_uri = deleted_model.uri_for(id, :repo_id => model.active_repository)
+              end
 
               if deleted_uri
                 deleted_uris << deleted_uri
@@ -318,6 +325,49 @@ module ASModel
       @system_modified = true
     end
 
+    def create_ark_identifier
+      if self.class == Resource 
+        ARKIdentifier.create_from_resource(self)
+      end
+
+      if self.class == DigitalObject
+        ARKIdentifier.create_from_digital_object(self)
+      end
+
+      if self.class == Accession
+        ARKIdentifier.create_from_accession(self)
+      end
+
+      if self.class == ArchivalObject
+        ARKIdentifier.create_from_archival_object(self)
+      end
+
+      if self.class == DigitalObjectComponent
+        ARKIdentifier.create_from_digital_object_component(self)
+      end
+    end
+
+    def delete_ark_identifier
+      if self.class == Resource 
+        ARKIdentifier.first(:resource_id => self.id).delete
+      end
+
+      if self.class == DigitalObject
+        ARKIdentifier.first(:digital_object_id => self.id).delete
+      end
+
+      if self.class == Accession
+        ARKIdentifier.first(:accession_id => self.id).delete
+      end
+
+      if self.class == ArchivalObject
+        ARKIdentifier.first(:archival_object_id => self.id).delete
+      end
+
+      if self.class == DigitalObjectComponent
+        ARKIdentifier.first(:digital_object_component_id => self.id).delete
+      end
+    end
 
     module ClassMethods
 
@@ -341,6 +391,7 @@ module ASModel
         fire_update(json, obj)
 
         obj.refresh
+        obj.create_ark_identifier
         obj
       end
 
