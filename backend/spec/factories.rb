@@ -13,7 +13,6 @@ FactoryBot.define do
   sequence(:username) {|n| "username_#{n}"}
 
   sequence(:good_markup) { "<p>I'm</p><p>GOOD</p><p>#{ FactoryBot.generate(:alphanumstr)}</p>" }
-  sequence(:whack_markup) { "I'm <p><br/>WACK " + FactoryBot.generate(:alphanumstr) }
   sequence(:wild_markup) { "<p> I AM \n WILD \n ! \n ! " + FactoryBot.generate(:alphanumstr) + "</p>" }
   sequence(:string) { FactoryBot.generate(:alphanumstr) }
   sequence(:generic_title) { |n| "Title: #{n}"}
@@ -24,9 +23,7 @@ FactoryBot.define do
 
   sequence(:phone_number) { (3..5).to_a[rand(3)].times.map { (3..5).to_a[rand(3)].times.map { rand(9) }.join }.join(' ') }
   sequence(:yyyy_mm_dd) { Time.at(rand * Time.now.to_i).to_s.sub(/\s.*/, '') }
-  sequence(:hh_mm) { t = Time.now; "#{t.hour}:#{t.min}" }
   sequence(:barcode) { 20.times.map { rand(2)}.join }
-  sequence(:indicator) { (2+rand(3)).times.map { (2+rand(3)).times.map {rand(9)}.join }.join('-') }
 
   sequence(:level) { %w(series subseries item)[rand(3)] }
 
@@ -114,17 +111,6 @@ FactoryBot.define do
       level { generate(:archival_record_level) }
       language { generate(:language) }
 
-    end
-
-    factory :extent do
-      json_schema_version { 1 }
-      portion { generate(:portion) }
-      number { generate(:number) }
-      extent_type { generate(:extent_type) }
-      resource_id { nil }
-      archival_object_id { nil }
-      dimensions { generate(:alphanumstr) }
-      physical_details { generate(:alphanumstr) }
     end
 
     factory :archival_object do
@@ -235,8 +221,6 @@ FactoryBot.define do
 
   factory :json_note_index_item, class: JSONModel(:note_index_item) do
     value { generate(:alphanumstr) }
-    #reference { generate(:alphanumstr) }
-    #reference_text { generate(:alphanumstr) }
     type { generate(:note_index_item_type) }
   end
 
@@ -396,17 +380,6 @@ FactoryBot.define do
     has_unpublished_ancestor { rand(2) == 0 }
   end
 
-  factory :json_digital_object_component_pub_ancestor, class: JSONModel(:digital_object_component) do
-    component_id { generate(:alphanumstr) }
-    title { "Digital Object Component #{generate(:generic_title)}" }
-    digital_object { {'ref' => create(:json_digital_object).uri} }
-    label { generate(:alphanumstr) }
-    display_string { generate(:alphanumstr) }
-    file_versions { few_or_none(:json_file_version) }
-    position { 5 }
-    has_unpublished_ancestor { false }
-  end
-
   factory :json_digital_object_component_unpub_ancestor, class: JSONModel(:digital_object_component) do
     component_id { generate(:alphanumstr) }
     title { "Digital Object Component #{generate(:generic_title)}" }
@@ -540,9 +513,6 @@ FactoryBot.define do
     sort_name_auto_generate { true }
   end
 
-  factory :json_collection_management, class: JSONModel(:collection_management) do
-  end
-
   factory :json_note_singlepart, class: JSONModel(:note_singlepart) do
     type { generate(:singlepart_note_type)}
     content { [ generate(:alphanumstr), generate(:alphanumstr) ] }
@@ -565,11 +535,6 @@ FactoryBot.define do
 
   factory :json_note_rights_statement, class: JSONModel(:note_rights_statement) do
     type { generate(:rights_statement_note_type)}
-    content { [ generate(:string), generate(:string) ] }
-  end
-
-  factory :json_note_rights_statement_act, class: JSONModel(:note_rights_statement_act) do
-    type { generate(:rights_statement_act_note_type)}
     content { [ generate(:string), generate(:string) ] }
   end
 
@@ -723,87 +688,6 @@ FactoryBot.define do
     base_record_uri { "repositories/2/resources/1" }
   end
 
-  factory :json_accession_job, class: JSONModel(:job) do
-    job { build(:json_acc_job) }
-  end
-
-  factory :json_acc_job, class: JSONModel(:report_job) do
-    report_type { 'AccessionReport' }
-    format { 'json' }
-  end
-
-  factory :json_deaccession_job, class: JSONModel(:job) do
-    job { build(:json_deacc_job) }
-  end
-
-  factory :json_deacc_job, class: JSONModel(:report_job) do
-    report_type { 'AccessionDeaccessionsListReport' }
-    format { 'json' }
-  end
-
-  factory :json_agent_job, class: JSONModel(:job) do
-    job { build(:json_agt_job) }
-  end
-
-  factory :json_agt_job, class: JSONModel(:report_job) do
-    report_type { 'AgentListReport' }
-    format { 'json' }
-  end
-
-  factory :json_dig_obj_file_job, class: JSONModel(:job) do
-    job { build(:json_do_file_job) }
-  end
-
-  factory :json_do_file_job, class: JSONModel(:report_job) do
-    report_type { 'DigitalObjectFileVersionsReport' }
-    format { 'json' }
-  end
-
-  factory :json_location_job, class: JSONModel(:job) do
-    job { build(:json_loc_job) }
-  end
-
-  factory :json_loc_job, class: JSONModel(:report_job) do
-    report_type { 'LocationReport' }
-    format { 'json' }
-  end
-
-  factory :json_resource_deacc_job, class: JSONModel(:job) do
-    job { build(:json_res_deacc_job) }
-  end
-
-  factory :json_res_deacc_job, class: JSONModel(:report_job) do
-    report_type { 'ResourceDeaccessionsListReport' }
-    format { 'json' }
-  end
-
-  factory :json_resource_restrict_job, class: JSONModel(:job) do
-    job { build(:json_res_res_job) }
-  end
-
-  factory :json_res_res_job, class: JSONModel(:report_job) do
-    report_type { 'ResourceRestrictionsListReport' }
-    format { 'json' }
-  end
-
-  factory :json_unproc_accession_job, class: JSONModel(:job) do
-    job { build(:json_unp_acc_job) }
-  end
-
-  factory :json_unp_acc_job, class: JSONModel(:report_job) do
-    report_type { 'UnprocessedAccessionsReport' }
-    format { 'json' }
-  end
-
-  factory :json_subject_list_job, class: JSONModel(:job) do
-    job { build(:json_sub_list_job) }
-  end
-
-  factory :json_sub_list_job, class: JSONModel(:report_job) do
-    report_type { 'SubjectListReport' }
-    format { 'json' }
-  end
-
   factory :json_preference, class: JSONModel(:preference) do
     defaults { build(:json_defaults) }
   end
@@ -819,8 +703,8 @@ FactoryBot.define do
   end
 
   factory :json_oai_config, class: JSONModel(:oai_config) do
-    oai_record_prefix 'archivesspace:oai'
-    oai_admin_email 'oairecord@example.org'
-    oai_repository_name 'ArchivesSpace OAI Repo'
+    oai_record_prefix { 'archivesspace:oai' }
+    oai_admin_email { 'oairecord@example.org' }
+    oai_repository_name { 'ArchivesSpace OAI Repo' }
   end
 end

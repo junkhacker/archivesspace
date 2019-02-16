@@ -54,9 +54,6 @@ module AspaceFactories
       sequence(:yyyy_mm_dd) { Time.at(rand * Time.now.to_i).to_s.sub(/\s.*/, '') }
       sequence(:alphanumstr) { SecureRandom.hex }
 
-      sequence(:username) {|n| "testuser_#{n}_#{Time.now.to_i}"}
-      sequence(:user_name) {|n| "Test User #{n}_#{Time.now.to_i}"}
-
       sequence(:repo_code) {|n| "testrepo_#{n}_#{Time.now.to_i}"}
       sequence(:repo_name) {|n| "Test Repo #{n}"}
       sequence(:accession_id) {|n| "#{n}" }
@@ -64,7 +61,6 @@ module AspaceFactories
       sequence(:ref_id) {|n| "aspace_#{n}"}
       sequence(:id_0) {|n| "#{Time.now.to_i}_#{n}"}
 
-      sequence(:number) { rand(1_000) }
       sequence(:accession_title) { |n| "Accession #{n}" }
       sequence(:resource_title) { |n| "Resource #{n}" }
       sequence(:archival_object_title) {|n| "Archival Object #{n}"}
@@ -98,7 +94,6 @@ module AspaceFactories
 
 
       sequence(:rde_template_name) {|n| "RDE Template #{n}_#{Time.now.to_i}"}
-      sequence(:four_part_id) { Digest::MD5.hexdigest("#{Time.now}#{SecureRandom.uuid}#{$$}").scan(/.{6}/)[0...1] }
 
       sequence(:top_container_indicator) {|n| "Container #{n}"}
       sequence(:building) {|n| "Maggie's #{n}th Farm_#{Time.now.to_i}" }
@@ -111,11 +106,6 @@ module AspaceFactories
         org_code { "123" }
         image_url { "http://foo.com/bar" }
         url { "http://foo.com" }
-      end
-
-      factory :user, class: JSONModel(:user) do
-        username { generate :username }
-        name { generate :user_name}
       end
 
       factory :accession, class: JSONModel(:accession) do
@@ -197,11 +187,6 @@ module AspaceFactories
         title { generate :digital_object_component_title }
       end
 
-      factory :instance_digital, class: JSONModel(:instance) do
-        instance_type { 'digital_object' }
-        digital_object { { "ref" => create(:digital_object).uri } }
-      end
-
       factory :file_version, class: JSONModel(:file_version) do
         file_uri { "http://example.com/1" }
         use_statement { generate(:use_statement) }
@@ -209,7 +194,7 @@ module AspaceFactories
         xlink_show_attribute { generate(:xlink_show_attribute) }
         file_format_name { generate(:file_format) }
         file_format_version { generate(:alphanumstr) }
-        file_size_bytes { generate(:number).to_i }
+        file_size_bytes { rand(1_000).to_i }
         checksum { generate(:alphanumstr) }
         checksum_method { generate(:checksum_method) }
       end
@@ -264,83 +249,10 @@ module AspaceFactories
         dates_of_existence { [build(:date, :label => 'existence')] }
       end
 
-      factory :agent_family, class: JSONModel(:agent_family) do
-        agent_type { 'agent_family' }
-        names { [build(:name_family)] }
-        dates_of_existence { [build(:json_date, :label => 'existence')] }
-      end
-
-      factory :agent_software, class: JSONModel(:agent_software) do
-        agent_type { 'agent_software' }
-        names { [build(:name_software)] }
-        dates_of_existence { [build(:json_date, :label => 'existence')] }
-      end
-
-      factory :agent_corporate_entity, class: JSONModel(:agent_corporate_entity) do
-        agent_type { 'agent_corporate_entity' }
-        names { [build(:name_corporate_entity)] }
-        dates_of_existence { [build(:json_date, :label => 'existence')] }
-      end
-
-      factory :name_corporate_entity, class: JSONModel(:name_corporate_entity) do
-        rules { generate(:name_rule) }
-        primary_name { generate(:generic_name) }
-        subordinate_name_1 { generate(:alphanumstr) }
-        subordinate_name_2 { generate(:alphanumstr) }
-        number { generate(:alphanumstr) }
-        sort_name { generate(:sort_name) }
-        sort_name_auto_generate { true }
-        dates { generate(:alphanumstr) }
-        qualifier { generate(:alphanumstr) }
-        authority_id { generate(:url) }
-        source { generate(:name_source) }
-      end
-
-      factory :name_family, class: JSONModel(:name_family) do
-        rules { generate(:name_rule) }
-        family_name { generate(:generic_name) }
-        sort_name { generate(:sort_name) }
-        sort_name_auto_generate { true }
-        dates { generate(:alphanumstr) }
-        qualifier { generate(:alphanumstr) }
-        prefix { generate(:alphanumstr) }
-        authority_id { generate(:url) }
-        source { generate(:name_source) }
-      end
-
-      factory :name_software, class: JSONModel(:name_software) do
-        rules { generate(:name_rule) }
-        software_name { generate(:generic_name) }
-        sort_name { generate(:sort_name) }
-        sort_name_auto_generate { true }
-      end
-
-      factory :subject, class: JSONModel(:subject) do
-        terms { [build(:term)] }
-        vocabulary { create(:vocab).uri }
-        authority_id { generate(:url) }
-        scope_note { generate(:alphanumstr) }
-        source { generate(:subject_source) }
-      end
-
       factory :term, class: JSONModel(:term) do
         term { generate(:term) }
         term_type { generate(:term_type) }
         vocabulary { create(:vocab).uri }
-      end
-
-      factory :top_container, class: JSONModel(:top_container) do
-        indicator { generate(:top_container_indicator) }
-      end
-
-      factory :container_location, class: JSONModel(:container_location) do
-        status { "current" }
-        start_date { "2015-01-01" }
-      end
-
-      factory :location, class: JSONModel(:location) do
-        building { generate(:building) }
-        barcode { "8675309" }
       end
 
       factory :vocab, class: JSONModel(:vocabulary) do
@@ -361,22 +273,6 @@ module AspaceFactories
         description { generate(:alphanumstr) }
       end
 
-      factory :container_profile, class: JSONModel(:container_profile) do
-        name { generate(:alphanumstr) }
-        extent_dimension { "width" }
-        dimension_units { "inches" }
-        width { "10" }
-        height { "10" }
-        depth { "10" }
-      end
-
-      factory :location_profile, class: JSONModel(:location_profile) do
-        name { generate(:alphanumstr) }
-        dimension_units { "inches" }
-        width { "100" }
-        height { "20" }
-        depth { "20" }
-      end
     end
 
     @@inited = true
